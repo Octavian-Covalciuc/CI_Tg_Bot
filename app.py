@@ -204,8 +204,10 @@ def manual_health_check():
 
 def start_scheduler():
     """Initialize and start the background scheduler"""
-    if not Config.MONITOR_URLS:
-        logger.warning("No MONITOR_URLS configured - health checks disabled")
+    if not health_checker.endpoints_to_check:
+        logger.warning(
+            "No monitor endpoints configured via YAML or MONITOR_URLS - health checks disabled"
+        )
         return
     
     # Add health check job
@@ -247,7 +249,7 @@ if __name__ == '__main__':
             f"✅ Custom message endpoint: `/notify/message`\n"
             f"✅ Test endpoint: `/webhook/test`\n"
             f"✅ Health checks: Every {Config.HEALTH_CHECK_INTERVAL}s\n"
-            f"✅ Monitoring {len(Config.MONITOR_URLS)} URL(s)"
+            f"✅ Monitoring {len(health_checker.endpoints_to_check)} endpoint(s)"
         )
         notifier.send_message(startup_msg)
         

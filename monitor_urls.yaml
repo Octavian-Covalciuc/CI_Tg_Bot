@@ -1,0 +1,49 @@
+# Canonical HTTP targets that the CI Telegram bot probes directly from YAML.
+monitors:
+  - env: dev
+    surface: frontdoor
+    name: Development Front Door
+    method: GET
+    url: https://afd-taxi-disp-rest-dev-ekemcbandrbcbfg2.a02.azurefd.net/taxi/ping
+    expected_status: 200
+    description: TaxiController ping endpoint to verify routing through Azure Front Door (dev).
+
+  - env: dev
+    surface: vm
+    name: Development VM
+    method: GET
+    url: http://taxi-disp-rest-dev.germanywestcentral.cloudapp.azure.com/taxi/ping
+    expected_status: 200
+    description: Direct VM HTTP check for TaxiController ping (dev).
+
+  - env: preprod
+    surface: frontdoor
+    name: Preprod Front Door
+    method: GET
+    url: https://afd-taxi-disp-rest-preprod-a9ckg5dcf4anfbde.a02.azurefd.net/taxi/ping
+    expected_status: 200
+    description: TaxiController ping routed through the preprod Front Door hostname.
+
+  - env: preprod
+    surface: vm
+    name: Preprod VM
+    method: GET
+    url: http://taxi-disp-rest-preprod.germanywestcentral.cloudapp.azure.com/taxi/ping
+    expected_status: 200
+    description: Direct VM ping for TaxiController in pre-production.
+
+  - env: prod
+    surface: frontdoor
+    name: Production Front Door
+    method: GET
+    url: https://afd-taxi-disp-rest-prod-ebavbhfwc7gsbqb2.a02.azurefd.net/taxi/ping
+    expected_status: 200
+    description: TaxiController ping served through the production Front Door.
+
+  - env: prod
+    surface: vm
+    name: Production VM
+    method: GET
+    url: http://taxi-disp-rest-prod.germanywestcentral.cloudapp.azure.com/taxi/ping
+    expected_status: 200
+    description: Direct VM ping for TaxiController in production.

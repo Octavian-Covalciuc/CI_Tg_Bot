@@ -75,8 +75,10 @@ WEBHOOK_HOST=0.0.0.0
 # Health check every 5 minutes
 HEALTH_CHECK_INTERVAL=300
 
-# Servers to monitor (comma-separated)
-MONITOR_URLS=http://taxi-disp-rest-dev.germanywestcentral.cloudapp.azure.com,http://taxi-disp-rest-preprod.germanywestcentral.cloudapp.azure.com,http://taxi-disp-rest-prod.germanywestcentral.cloudapp.azure.com
+# Path to the YAML manifest with Front Door + VM endpoints
+MONITOR_CONFIG_PATH=CI_Tg_Bot/monitor_urls.yaml
+# (Optional fallback) provide comma-separated URLs when YAML can't be mounted
+# MONITOR_URLS=http://taxi-disp-rest-dev.germanywestcentral.cloudapp.azure.com,http://taxi-disp-rest-preprod.germanywestcentral.cloudapp.azure.com,http://taxi-disp-rest-prod.germanywestcentral.cloudapp.azure.com
 
 # Branches to monitor
 MONITORED_BRANCHES=development,pre-prod,main
@@ -240,12 +242,17 @@ notify_deployment:
 
 ## Monitoring Configuration
 
+### Use the curated endpoint manifest
+
+`monitor_urls.yaml` is now the source of truth. Each entry specifies the environment, whether it hits Azure Front Door or the VM directly, and which controller endpoint is queried (`GET /taxi/ping`). Mount a copy beside the bot or point `MONITOR_CONFIG_PATH` to its location and the bot will load it automatically on startup.
+
+Commit YAML changes whenever endpoints move so both surfaces stay covered.
+
 ### Add More URLs to Monitor
 
-Edit `.env`:
-```env
-MONITOR_URLS=http://server1.com,http://server2.com,http://server3.com/health
-```
+Append more entries to `monitor_urls.yaml` (or to the file referenced by `MONITOR_CONFIG_PATH`). Each block supports `env`, `surface`, `method`, `url`, and the expected status code.
+
+Need a quick one-off without shipping a YAML file? Set the legacy `MONITOR_URLS` variable with a comma-separated list and it will act as a fallback.
 
 ### Change Check Interval
 
