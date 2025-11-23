@@ -99,7 +99,6 @@ class HealthChecker:
             }
     
     def check_all(self) -> List[Dict]:
-        """Check all configured endpoints"""
         results = []
         for endpoint in self.endpoints_to_check:
             result = self.check_endpoint(endpoint)

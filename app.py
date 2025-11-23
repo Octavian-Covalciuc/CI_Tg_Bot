@@ -26,7 +26,6 @@ scheduler = BackgroundScheduler()
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Health check endpoint for the bot itself"""
     return jsonify({
         'status': 'healthy',
         'bot': 'telegram-ci-notifier',
@@ -36,12 +35,11 @@ def health():
 
 @app.route('/webhook/test', methods=['POST'])
 def test_webhook():
-    """Test endpoint to verify webhook is working"""
     try:
         data = request.json or {}
         message = data.get('message', 'Test webhook received!')
         
-        notifier.send_message(f"🧪 **Test Webhook**\n\n{message}")
+        notifier.send_message(f"**Test Webhook**\n\n{message}")
         
         return jsonify({
             'status': 'success',
@@ -161,7 +159,6 @@ def custom_message():
 
 
 def scheduled_health_check():
-    """Scheduled job to check server health"""
     try:
         logger.info("Running scheduled health check...")
         results = health_checker.check_all()
